@@ -1,29 +1,19 @@
-$(function() {
+//This is where the objects created at the 'objects' class are rendered and physics qualities of those objects are calculated. T
+
+window.physics = $(function() {
 
 Physics(function(world){
+  //Get objects and renderer from objects class.
+  var objects = window.objects[0].getObjects();
 
-  var renderer = Physics.renderer('pixi', {
-    el: 'viewport', // id of the canvas element
-    width: 1920,
-    height: 1280
-  });
+  //Add renderer to the world
+  world.add(objects.renderer);
 
-  world.add(renderer);
-  var square = Physics.body('convex-polygon', {
-    x: 250,
-    y: 250,
-    vx: 0.01,
-    vertices: [
-        {x: 0, y: 50},
-        {x: 50, y: 50},
-        {x: 50, y: 0},
-        {x: 0, y: 0}
-    ]
-});
+  for (var i = 0; i < objects.squares.length; i++) {
+    world.add(objects.squares[i]);
+  }
+  world.add(objects.square);
 
-  world.add( square );
-  world.render();
-  
   // subscribe to ticker to advance the simulation
   Physics.util.ticker.subscribe(function( time, dt ){
     world.step( time );
@@ -36,45 +26,22 @@ Physics(function(world){
     world.render();
   });
 
+
+  //Adds gravitation to canvas
   world.add( Physics.behavior('constant-acceleration') );
 
-  //Set boundaries for canvas.
+  //Set boundaries for canvas to recgnize collsions.
   var bounds = Physics.aabb(0, 0, 1920, 1280);
 
-  // ensure objects bounce when edge collision is detected
+  // ensure objects bounce when edge collision is detected this can be extended to contain listener on how to react when collision is detected
   world.add( Physics.behavior('body-impulse-response') );
   world.add( Physics.behavior('edge-collision-detection', {
     aabb: bounds,
-    restitution: 0.3
+    restitution: 0.3 //Sets the bouncing speed and power.
   }));
 
-  world.add( Physics.body('convex-polygon', {
-    x: 250,
-    y: 50,
-    vx: 0.05,
-    vertices: [
-      {x: 0, y: 80},
-      {x: 60, y: 40},
-      {x: 60, y: -40},
-      {x: 0, y: -80}
-    ]
-  }));
-
-  world.add( Physics.body('convex-polygon', {
-    x: 400,
-    y: 200,
-    vx: -0.02,
-    vertices: [
-      {x: 0, y: 80},
-      {x: 80, y: 0},
-      {x: 0, y: -80},
-      {x: -30, y: -30},
-      {x: -30, y: 30}
-    ]
-  }));
-
-  world.add( Physics.behavior('body-collision-detection') );
-  world.add( Physics.behavior('sweep-prune') );
+  world.add( Physics.behavior('body-collision-detection') ); //Recognizes the collisions between objects.
+  world.add( Physics.behavior('sweep-prune') ); //add sweeping and pruning between objects
 
   });
-});
+}(jQuery));
