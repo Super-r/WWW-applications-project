@@ -27,39 +27,25 @@
         <![endif]-->
 
 
-        <div class="container">
-            <div class="header">
-                <h1 class="text-muted">WWW applications project</h3>
-            </div>
-        <section id="container">
-            <canvas id="main" width="1920px" height="1200px"></canvas>
-        </section>
+        <!-- The canvas comes here -->
 
-        </div>
+        <section id="viewport"></section>
+        
 
+
+        <script src="bower_components/jquery/jquery.js"></script>
+        <script src="bower_components/physicsjs/dist/physicsjs-full-0.5.3.js"></script>
+        <script src="bower_components/pixijs/pixi.js"></script>
+        <script src="http://www.bluerex.ca/projects/physicsjs-pixi/js/pixi-renderer.js"></script>
 
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
-        <script src="bower_components/jquery/jquery.js"></script>
+        <script src="scripts/main.js"></script>
+        <script src="scripts/physics.js"></script>
         <!-- endbower -->
-        <!-- endbuild -->
-        <!-- build:js scripts/plugins.js -->
-        <script src="bower_components/sass-bootstrap/js/affix.js"></script>
-        <script src="bower_components/sass-bootstrap/js/alert.js"></script>
-        <script src="bower_components/sass-bootstrap/js/dropdown.js"></script>
-        <script src="bower_components/sass-bootstrap/js/tooltip.js"></script>
-        <script src="bower_components/sass-bootstrap/js/modal.js"></script>
-        <script src="bower_components/sass-bootstrap/js/transition.js"></script>
-        <script src="bower_components/sass-bootstrap/js/button.js"></script>
-        <script src="bower_components/sass-bootstrap/js/popover.js"></script>
-        <script src="bower_components/sass-bootstrap/js/carousel.js"></script>
-        <script src="bower_components/sass-bootstrap/js/scrollspy.js"></script>
-        <script src="bower_components/sass-bootstrap/js/collapse.js"></script>
-        <script src="bower_components/sass-bootstrap/js/tab.js"></script>
         <!-- endbuild -->
 
         <!-- build:js({app,.tmp}) scripts/main.js -->
-        <script src="scripts/main.js"></script>
         <!-- endbuild -->
-</body>
+    </body>
 </html>
