@@ -10,12 +10,6 @@ window.objects = $(function() {
       height: 480
     });
     renderer.stage.interactive = true;
-    renderer.stage.mousedown = function(mouseData){
-      console.log("yeah OUTSIDE!");
-    };
-    renderer.stage.mousemove = function(mouseData){
-      console.log("yeah!");
-    };
     return renderer;
   };
 
@@ -44,9 +38,8 @@ window.objects = $(function() {
   var square = function() {
     var square = Physics.body('circle', {
       x: 25,
-      y: 355,
-      radius: 25,
-      vx: 2.0
+      y: 455,
+      radius: 25
     });
     return square;
   };
