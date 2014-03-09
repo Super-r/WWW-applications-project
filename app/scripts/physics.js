@@ -42,19 +42,24 @@ window.physics = $(function() {
     sq.view.mouseup = sq.view.mouseupoutside = sq.view.touchend = sq.view.touchendoutside = function(data) {
       this.dragging = false;
       world._bodies[25].fixed = false;
+      //Calculate the current velocity of the object.
+      world._bodies[25].state.vel._[0] = (world._bodies[25].state.pos._[0] - world._bodies[25].state.old.pos._[0]) / (world._dt*10);
+      world._bodies[25].state.vel._[1] = (world._bodies[25].state.pos._[1] - world._bodies[25].state.old.pos._[1]) / (world._dt*10);
       // set the interaction data to null
       this.data = null;
     };
 
     // set the callbacks for when the mouse or a touch moves
     sq.view.mousemove = sq.view.touchmove = function(data) {
-      if(this.dragging) {
-        var newPosition = this.data.getLocalPosition(this.parent);
-        this.position.x = newPosition.x;
-        this.position.y = newPosition.y;
-        world._bodies[25].state.pos._[0] = newPosition.x;
-        world._bodies[25].state.pos._[1] = newPosition.y;
-      }
+        if(this.dragging) {
+          var newPosition = this.data.getLocalPosition(this.parent);
+          this.position.x = newPosition.x;
+          this.position.y = newPosition.y;
+          world._bodies[25].state.old.pos._[0] = world._bodies[25].state.pos._[0];
+          world._bodies[25].state.old.pos._[1] = world._bodies[25].state.pos._[1];
+          world._bodies[25].state.pos._[0] = newPosition.x;
+          world._bodies[25].state.pos._[1] = newPosition.y;
+        }
     };
 
     // subscribe to ticker to advance the simulation
