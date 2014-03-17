@@ -7,7 +7,7 @@ window.objects = $(function() {
     var renderer = Physics.renderer('pixi', {
       el: 'viewport', // id of the canvas element
       width: 640,
-      height: 480
+      height: 320
     });
     renderer.stage.interactive = true;
     return renderer;
@@ -21,7 +21,7 @@ window.objects = $(function() {
    	  for (var j = 0; j < 5; j++) {
         var square = Physics.body('convex-polygon', {
           x: 550 + j*20,
-          y: 480 - i * 20,
+          y: 320 - i * 20,
           vertices: [
             {x: 0, y: 20},
             {x: 20, y: 20},
