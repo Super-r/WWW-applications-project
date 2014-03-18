@@ -7,20 +7,6 @@ window.physics = $(function() {
     //Add renderer to the world
     world.add(objects.renderer);
 
-    var squares = objects.squares;
-    for (var i = 0; i < squares.length; i++) {
-     /* squares[i].view = objects.renderer.createDisplay('sprite', {
-        texture: 'resources/img/brick.png',
-        anchor: {
-          x: 0.5,
-          y: 0.5
-        }
-      });
-      squares[i].view.scale.x = 0.20;
-      squares[i].view.scale.y = 0.20;*/
-      world.add(squares[i]);
-    };
-
     var farTexture = PIXI.Texture.fromImage("resources/background/bg-far.png");
     var far = new PIXI.TilingSprite(farTexture, 640, 320);
     far.position.x = 0;
@@ -36,6 +22,21 @@ window.physics = $(function() {
     mid.tilePosition.x = 0;
     mid.tilePosition.y = 0;
     world._renderer.stage.addChild(mid);
+
+
+    var squares = objects.squares;
+    for (var i = 0; i < squares.length; i++) {
+      squares[i].view = objects.renderer.createDisplay('sprite', {
+        texture: 'resources/img/brick.png',
+        anchor: {
+          x: 0.5,
+          y: 0.5
+        }
+      });
+      squares[i].view.scale.x = 0.32;
+      squares[i].view.scale.y = 0.32;
+      world.add(squares[i]);
+    };
 
 
     var sq = objects.square;
