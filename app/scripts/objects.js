@@ -22,18 +22,19 @@ window.objects = $(function() {
     var xres = resolutions()["x"];
     var yres = resolutions()["y"];
     var castle = new Array();
-    var bh = 30;
+    var bh = 25;
     var distances = [400, 100, 16, 16];
-    if (yres < 400){
+    
+    /*if (yres < 400){
       bh = bh/1.5;
       for (i = 0; i < distances.length; i++){
         distances[i] = distances[i]/1.5;
       }
-    }
+    }*/
 
     
     var tower = new Array();
-    for (var i = 0; i < 10; i++){
+    for (var i = 0; i < 8; i++){
       var m = 0.4;
       for (var j = 0; j < 3; j++){    
         var square = Physics.body('convex-polygon', {
@@ -114,6 +115,7 @@ window.objects = $(function() {
     var square = Physics.body('circle', {
       x: 25,
       y: 455,
+      m: 10.0,
       radius: 25
     });
     return square;
@@ -121,8 +123,10 @@ window.objects = $(function() {
   
   var resolutions = function(){
     return {
-      'x': $(window).width()-30,
-      'y': $(window).height()-50
+      //'x': $(window).width()-30,
+      //'y': $(window).height()-50
+      'x': 640,
+      'y': 320
     }
   }
 

@@ -3,17 +3,27 @@
 window.physics = $(function() {
   'use strict';
   Physics(function(world){
-    objects = window.objects[0];
+    objects = window.objects[0].getObjects();;
     //Add renderer to the world
-    world.add(window.objects[0].renderer);
+    world.add(objects.renderer);
     
-    var squares = window.objects[0].squares;
+    /*var squares = objects.squares;
     for (var i = 0; i < squares.length; i++) {
-      world.add(squares[i]);
+      squares[i].view = objects.renderer.createDisplay('sprite', {
+        texture: 'img/brick.png',
+        anchor: {
+            x: 0.5,
+            y: 0.5
+        }
+      });
+      //squares[i].view.setInteractive(true);
+      //squares[i].view.scale.x = 0.20;
+      //squares[i].view.scale.y = 0.20;
+      world.add(squares[i]); 
     }
-
-    var sq = window.objects[0].square;
-    sq.view = window.objects[0].renderer.createDisplay('sprite', {
+    console.log(world);*/
+    var sq = objects.square;
+    sq.view = objects.renderer.createDisplay('sprite', {
       texture: 'img/cball.png',
       anchor: {
         x: 0.5,
@@ -23,14 +33,15 @@ window.physics = $(function() {
     sq.view.setInteractive(true);
     sq.view.scale.x = 0.20;
     sq.view.scale.y = 0.20;
-    world.add(sq);
+    
+    objects.renderer.loadSpritesheets(['img/brick.png'], loadActors);
 
     //Here are the listeners for mouse and touch events of the ball
 
     sq.view.mousedown = sq.view.touchstart = function(data) {
       // stop the default event...
       data.originalEvent.preventDefault();
-      world._bodies[25].fixed = true;
+      world._bodies[world._bodies.length-1].fixed = true;
       // store a reference to the data
       // The reason for this is because of multitouch
       // we want to track the movement of this particular touch
@@ -41,10 +52,10 @@ window.physics = $(function() {
     // set the events for when the mouse is released or a touch is released
     sq.view.mouseup = sq.view.mouseupoutside = sq.view.touchend = sq.view.touchendoutside = function(data) {
       this.dragging = false;
-      world._bodies[25].fixed = false;
+      world._bodies[world._bodies.length-1].fixed = false;
       //Calculate the current velocity of the object.
-      world._bodies[25].state.vel._[0] = (world._bodies[25].state.pos._[0] - world._bodies[25].state.old.pos._[0]) / (world._dt*10);
-      world._bodies[25].state.vel._[1] = (world._bodies[25].state.pos._[1] - world._bodies[25].state.old.pos._[1]) / (world._dt*10);
+      world._bodies[world._bodies.length-1].state.vel._[0] = (world._bodies[world._bodies.length-1].state.pos._[0] - world._bodies[world._bodies.length-1].state.old.pos._[0]) / (world._dt*10);
+      world._bodies[world._bodies.length-1].state.vel._[1] = (world._bodies[world._bodies.length-1].state.pos._[1] - world._bodies[world._bodies.length-1].state.old.pos._[1]) / (world._dt*10);
       // set the interaction data to null
       this.data = null;
     };
@@ -55,10 +66,10 @@ window.physics = $(function() {
           var newPosition = this.data.getLocalPosition(this.parent);
           this.position.x = newPosition.x;
           this.position.y = newPosition.y;
-          world._bodies[25].state.old.pos._[0] = world._bodies[25].state.pos._[0];
-          world._bodies[25].state.old.pos._[1] = world._bodies[25].state.pos._[1];
-          world._bodies[25].state.pos._[0] = newPosition.x;
-          world._bodies[25].state.pos._[1] = newPosition.y;
+          world._bodies[world._bodies.length-1].state.old.pos._[0] = world._bodies[world._bodies.length-1].state.pos._[0];
+          world._bodies[world._bodies.length-1].state.old.pos._[1] = world._bodies[world._bodies.length-1].state.pos._[1];
+          world._bodies[world._bodies.length-1].state.pos._[0] = newPosition.x;
+          world._bodies[world._bodies.length-1].state.pos._[1] = newPosition.y;
         }
     };
 
@@ -71,7 +82,7 @@ window.physics = $(function() {
     world.subscribe('step', function(){
       world.render();
     });
-
+  console.log(world);
   //Add renderer to the world
   world.add(objects.renderer);
 
@@ -81,7 +92,6 @@ window.physics = $(function() {
   //}
   
   world.add(objects.square);
-
 
     //Adds gravitation to canvas
     world.add( Physics.behavior('constant-acceleration') );
@@ -93,7 +103,7 @@ window.physics = $(function() {
     world.add( Physics.behavior('body-impulse-response') );
     world.add( Physics.behavior('edge-collision-detection', {
       aabb: bounds,
-      restitution: 1.3 //Sets the bouncing speed and power.
+      restitution: 0.3 //Sets the bouncing speed and power.
     }));
 
     world.add( Physics.behavior('body-collision-detection') ); //Recognizes the collisions between objects.
@@ -105,9 +115,54 @@ window.physics = $(function() {
 
   world.add( rcm );
 
-  // start the ticker
-  Physics.util.ticker.start();
-
+  function loadActors(){
+    var xres = objects.res["x"];
+    var yres = objects.res["y"];
+    var castle = new Array();
+    var bh = 32;
+    var distances = [400, 100, 16, 16];
+    
+    /*if (yres < 400){
+      bh = bh/1.5;
+      for (i = 0; i < distances.length; i++){
+        distances[i] = distances[i]/1.5;
+      }
+    }*/
+  
+    var tower = new Array();
+    for (var i = 0; i < 8; i++){
+      var m = 1.0;
+      for (var j = 0; j < 3; j++){    
+        var square = Physics.body('convex-polygon', {
+          x: xres - distances[0] + j * bh,
+          y: yres - distances[2] - i * bh,
+          mass: m,
+          fixed: false,
+          // body restitution. How "bouncy" is it?
+          restitution: 1.0,
+          cof: 3.0,
+          vertices: [
+            {x: 0, y: bh},
+            {x: bh, y: bh},
+            {x: bh, y: 0},
+            {x: 0, y: 0}
+            ]
+        });
+        square.view = objects.renderer.createDisplay('sprite', {
+          texture: 'img/brick.png',
+          anchor: {
+              x: 0.5,
+              y: 0.5
+          }
+        });
+        square.view.scale.x = 0.5;
+        square.view.scale.y = 0.5;
+        world.add(square);  
+             
+      }
+    }
+    world.add(sq); 
+  }
 
   });
 }(jQuery));
