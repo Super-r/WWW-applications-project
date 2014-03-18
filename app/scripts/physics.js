@@ -41,10 +41,23 @@ window.physics = $(function() {
     sq.view.scale.y = 0.20;
     world.add(sq);
 
+    // In future this function should be used to move the viewport when user scrolls
+    // and also when the ball is at the center of the canvas.
+    //
+    function moveViewport(data) {
+          var xDiff = window.x - data.global.x;
+          far.tilePosition.x -= xDiff/60;
+          mid.tilePosition.x -= xDiff/10;
+          for (i = 0; i < world._bodies.length; i++) {
+            //world._bodies[i].fixed = true;
+            world._bodies[i].state.old.pos._[0] -= xDiff;
+            world._bodies[i].state.pos._[0] -= xDiff;
+          }
+          window.x = data.global.x;
+    };
 
     //Here are the listeners for mouse and touch events of the ball
     //
-
     world._renderer.stage.mousedown = world._renderer.stage.touchstart = function(data) {
       // stop the default event...
       data.originalEvent.preventDefault();
@@ -57,32 +70,26 @@ window.physics = $(function() {
     };
 
     // set the events for when the mouse is released or a touch is released
+    //
     world._renderer.stage.mouseup = world._renderer.stage.mouseupoutside = world._renderer.stage.touchend = world._renderer.stage.touchendoutside = function(data) {
       this.dragging = false;
       world._bodies[25].fixed = false;
-      //Calculate the current velocity of the object.
-      world._bodies[25].state.vel._[0] = (world._bodies[25].state.pos._[0] - world._bodies[25].state.old.pos._[0]) / (world._dt*10);
-      world._bodies[25].state.vel._[1] = (world._bodies[25].state.pos._[1] - world._bodies[25].state.old.pos._[1]) / (world._dt*10);
-      // set the interaction data to null
+      for (i = 0; i < world._bodies.length -1; i++) {
+        world._bodies[i].fixed = false;
+      }
       this.data = null;
     };
 
     // set the callbacks for when the mouse or a touch moves
+    //
     world._renderer.stage.mousemove = world._renderer.stage.touchmove = function(data) {
-        if(this.dragging) {
-          var xDiff = window.x - data.global.x;
-          console.log(xDiff);
-          far.tilePosition.x += xDiff/60;
-          mid.tilePosition.x += xDiff/10;
-          window.x = data.global.x;
+        if(this.dragging && !world._bodies[25].view.dragging && ((far.tilePosition.x < 0 && data.originalEvent.webkitMovementX > 0) || (far.tilePosition.x > -12 && data.originalEvent.webkitMovementX < 0))) {
+            moveViewport(data);
         }
     };
 
-
-
     //Here are the listeners for mouse and touch events of the ball
     //
-
     sq.view.mousedown = sq.view.touchstart = function(data) {
       // stop the default event...
       data.originalEvent.preventDefault();
@@ -94,7 +101,8 @@ window.physics = $(function() {
       this.dragging = true;
     };
 
-        // set the events for when the mouse is released or a touch is released
+    // set the events for when the mouse is released or a touch is released
+    //
     sq.view.mouseup = sq.view.mouseupoutside = sq.view.touchend = sq.view.touchendoutside = function(data) {
       this.dragging = false;
       world._bodies[25].fixed = false;
@@ -106,6 +114,7 @@ window.physics = $(function() {
     };
 
     // set the callbacks for when the mouse or a touch moves
+    //
     sq.view.mousemove = sq.view.touchmove = function(data) {
         if(this.dragging) {
           var newPosition = this.data.getLocalPosition(this.parent);
@@ -124,9 +133,7 @@ window.physics = $(function() {
     });
     // start the ticker
     Physics.util.ticker.start();
-    world.subscribe('step', function(){
-      //far.tilePosition.x -= 0.128;
-      //mid.tilePosition.x -= 0.64;
+    world.subscribe('step', function() {
       world.render();
     });
 
@@ -137,7 +144,7 @@ window.physics = $(function() {
 
     //Set boundaries for canvas to recognize collsions.
     //
-    var bounds = Physics.aabb(0, 0, 640, 320);
+    var bounds = Physics.aabb(-640, -320, 1280, 320);
 
     // ensure objects bounce when edge collision is detected this can be extended to contain listener on how to react when collision is detected
     //

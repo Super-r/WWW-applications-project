@@ -20,7 +20,7 @@ window.objects = $(function() {
  	  for (var i = 0; i < 5; i++) {
    	  for (var j = 0; j < 5; j++) {
         var square = Physics.body('convex-polygon', {
-          x: 550 + j*20,
+          x: 1190 + j*20,
           y: 320 - i * 20,
           vertices: [
             {x: 0, y: 20},
