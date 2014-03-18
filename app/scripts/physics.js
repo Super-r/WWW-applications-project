@@ -3,13 +3,23 @@
 window.physics = $(function() {
   'use strict';
   Physics(function(world){
+    var objects = window.objects[0].getObjects();;
     //Add renderer to the world
-    world.add(window.objects[0].renderer);
-    
-    var squares = window.objects[0].squares;
+    world.add(objects.renderer);
+
+    var squares = objects.squares;
     for (var i = 0; i < squares.length; i++) {
+     /* squares[i].view = objects.renderer.createDisplay('sprite', {
+        texture: 'resources/img/brick.png',
+        anchor: {
+          x: 0.5,
+          y: 0.5
+        }
+      });
+      squares[i].view.scale.x = 0.20;
+      squares[i].view.scale.y = 0.20;*/
       world.add(squares[i]);
-    }
+    };
 
     var farTexture = PIXI.Texture.fromImage("resources/background/bg-far.png");
     var far = new PIXI.TilingSprite(farTexture, 640, 320);
@@ -28,8 +38,8 @@ window.physics = $(function() {
     world._renderer.stage.addChild(mid);
 
 
-    var sq = window.objects[0].square;
-    sq.view = window.objects[0].renderer.createDisplay('sprite', {
+    var sq = objects.square;
+    sq.view = objects.renderer.createDisplay('sprite', {
       texture: 'resources/img/cball.png',
       anchor: {
         x: 0.5,
@@ -93,7 +103,7 @@ window.physics = $(function() {
     sq.view.mousedown = sq.view.touchstart = function(data) {
       // stop the default event...
       data.originalEvent.preventDefault();
-      world._bodies[25].fixed = true;
+      world._bodies[world._bodies.length-1].fixed = true;
       // store a reference to the data
       // The reason for this is because of multitouch
       // we want to track the movement of this particular touch
@@ -105,10 +115,10 @@ window.physics = $(function() {
     //
     sq.view.mouseup = sq.view.mouseupoutside = sq.view.touchend = sq.view.touchendoutside = function(data) {
       this.dragging = false;
-      world._bodies[25].fixed = false;
+      world._bodies[world._bodies.length-1].fixed = false;
       //Calculate the current velocity of the object.
-      world._bodies[25].state.vel._[0] = (world._bodies[25].state.pos._[0] - world._bodies[25].state.old.pos._[0]) / (world._dt*10);
-      world._bodies[25].state.vel._[1] = (world._bodies[25].state.pos._[1] - world._bodies[25].state.old.pos._[1]) / (world._dt*10);
+      world._bodies[world._bodies.length-1].state.vel._[0] = (world._bodies[world._bodies.length-1].state.pos._[0] - world._bodies[world._bodies.length-1].state.old.pos._[0]) / (world._dt*10);
+      world._bodies[world._bodies.length-1].state.vel._[1] = (world._bodies[world._bodies.length-1].state.pos._[1] - world._bodies[world._bodies.length-1].state.old.pos._[1]) / (world._dt*10);
       // set the interaction data to null
       this.data = null;
     };
@@ -120,10 +130,10 @@ window.physics = $(function() {
           var newPosition = this.data.getLocalPosition(this.parent);
           this.position.x = newPosition.x;
           this.position.y = newPosition.y;
-          world._bodies[25].state.old.pos._[0] = world._bodies[25].state.pos._[0];
-          world._bodies[25].state.old.pos._[1] = world._bodies[25].state.pos._[1];
-          world._bodies[25].state.pos._[0] = newPosition.x;
-          world._bodies[25].state.pos._[1] = newPosition.y;
+          world._bodies[world._bodies.length-1].state.old.pos._[0] = world._bodies[world._bodies.length-1].state.pos._[0];
+          world._bodies[world._bodies.length-1].state.old.pos._[1] = world._bodies[world._bodies.length-1].state.pos._[1];
+          world._bodies[world._bodies.length-1].state.pos._[0] = newPosition.x;
+          world._bodies[world._bodies.length-1].state.pos._[1] = newPosition.y;
         }
     };
 
@@ -136,7 +146,6 @@ window.physics = $(function() {
     world.subscribe('step', function() {
       world.render();
     });
-
 
     //Adds gravitation to canvas
     //
@@ -156,6 +165,14 @@ window.physics = $(function() {
 
     world.add( Physics.behavior('body-collision-detection') ); //Recognizes the collisions between objects.
     world.add( Physics.behavior('sweep-prune') ); //add sweeping and pruning between objects
+
+  var rcm = Physics.behavior('rigid-constraint-manager', {
+    targetLength: 1
+  });
+
+  world.add( rcm );
+
+
 
   });
 }(jQuery));
