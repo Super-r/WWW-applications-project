@@ -3,6 +3,7 @@
 window.physics = $(function() {
   'use strict';
   Physics(function(world){
+    objects = window.objects[0];
     //Add renderer to the world
     world.add(window.objects[0].renderer);
     
@@ -10,7 +11,6 @@ window.physics = $(function() {
     for (var i = 0; i < squares.length; i++) {
       world.add(squares[i]);
     }
-
 
     var sq = window.objects[0].square;
     sq.view = window.objects[0].renderer.createDisplay('sprite', {
@@ -72,22 +72,42 @@ window.physics = $(function() {
       world.render();
     });
 
+  //Add renderer to the world
+  world.add(objects.renderer);
+
+  //for (var i = 0; i < objects.squares.length; i++) {
+  //  var object = objects.squares[i];
+  //  world.add(object);
+  //}
+  
+  world.add(objects.square);
+
 
     //Adds gravitation to canvas
     world.add( Physics.behavior('constant-acceleration') );
 
     //Set boundaries for canvas to recgnize collsions.
-    var bounds = Physics.aabb(0, 0, 640, 480);
+    var bounds = Physics.aabb(0, 0, objects.res["x"], objects.res["y"]);
 
     // ensure objects bounce when edge collision is detected this can be extended to contain listener on how to react when collision is detected
     world.add( Physics.behavior('body-impulse-response') );
     world.add( Physics.behavior('edge-collision-detection', {
       aabb: bounds,
-      restitution: 0.3 //Sets the bouncing speed and power.
+      restitution: 1.3 //Sets the bouncing speed and power.
     }));
 
     world.add( Physics.behavior('body-collision-detection') ); //Recognizes the collisions between objects.
     world.add( Physics.behavior('sweep-prune') ); //add sweeping and pruning between objects
+
+  var rcm = Physics.behavior('rigid-constraint-manager', {
+    targetLength: 1
+  });
+
+  world.add( rcm );
+
+  // start the ticker
+  Physics.util.ticker.start();
+
 
   });
 }(jQuery));
