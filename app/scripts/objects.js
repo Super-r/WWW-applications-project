@@ -33,7 +33,7 @@ window.objects = $(function() {
           ],
           restitution: 0.05,
           fixed: true,
-          mass: 1,
+          mass: 5,
           cof: 1
         });
       squares.push(square);
@@ -64,8 +64,19 @@ window.objects = $(function() {
     button.scale.y = 0.4;
     button.position.x = 55;
     button.position.y = 15;
+    button.interactive = true;
+    return button;
+  };  
 
-    // make the button interactive..
+  var golfButton = function() {
+    var button = new PIXI.Sprite(PIXI.Texture.fromImage('resources/img/golfButtonUp.png'));
+    button.buttonMode = true;
+    button.anchor.x = 0.5;
+    button.anchor.y = 0.5;
+    button.scale.x = 0.4;
+    button.scale.y = 0.4;
+    button.position.x = 275;
+    button.position.y = 15;
     button.interactive = true;
     return button;
   };
@@ -77,10 +88,8 @@ window.objects = $(function() {
     button.anchor.y = 0.5;
     button.scale.x = 0.4;
     button.scale.y = 0.4;
-    button.position.x = 170;
+    button.position.x = 165;
     button.position.y = 15;
-
-    // make the button interactive..
     button.interactive = true;
     return button;
   };
@@ -103,6 +112,7 @@ window.objects = $(function() {
         'renderer': renderer(),
         'tennisButton': tennisButton(),
         'cannonballButton': cannonballButton(),
+        'golfButton': golfButton(),
         'res': resolutions()
       };
     }

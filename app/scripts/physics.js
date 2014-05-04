@@ -9,6 +9,7 @@ window.physics = $(function() {
         var backgrounds = window.background[0].getBackgrounds();
         var tennisButton = objects.tennisButton;
         var cannonballButton = objects.cannonballButton;
+        var golfButton = objects.golfButton;
 
         // Add background images
         //
@@ -22,6 +23,7 @@ window.physics = $(function() {
         //
         world._renderer.stage.addChild(cannonballButton);
         world._renderer.stage.addChild(tennisButton);
+        world._renderer.stage.addChild(golfButton);
 
 
         var squares = objects.squares;
@@ -52,7 +54,8 @@ window.physics = $(function() {
           sq.view.scale.y = 0.20;
           world.add(sq);
 
-        // set the mousedown and touchstart callback.
+        // set the mousedown and touchstart callbacks for buttons.
+        //
         tennisButton.mousedown = tennisButton.touchstart = function(data) {
           this.setTexture(PIXI.Texture.fromImage('resources/img/tennisButtonDown.png'));
         };
@@ -67,6 +70,14 @@ window.physics = $(function() {
                
         cannonballButton.mouseup = cannonballButton.touchend = function(data) {
           buttonUp(this, sq, "cannon");
+        };
+
+        golfButton.mousedown = cannonballButton.touchstart = function(data) {
+          this.setTexture(PIXI.Texture.fromImage('resources/img/golfButtonDown.png'));
+        };
+               
+        golfButton.mouseup = cannonballButton.touchend = function(data) {
+          buttonUp(this, sq, "golf");
         };
 
 

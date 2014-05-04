@@ -100,7 +100,7 @@ $(function() {
         object.view.scale.x = 0.13;
         object.view.scale.y = 0.13;  
         object.mass = 0.1;
-        object.restitution = 3.5;    
+        object.restitution = 3.0;    
         object.geometry.radius = 13;
         object.x = 45;
         object.y = 350;
@@ -108,6 +108,7 @@ $(function() {
         object.recalc();  
       }
       if (type === "cannon") {
+          button.setTexture(PIXI.Texture.fromImage('resources/img/cannonballButtonUp.png'));
           object.view.setTexture(PIXI.Texture.fromImage('resources/img/cball.png'));
           object.view.scale.x = 0.20;
           object.view.scale.y = 0.20;  
@@ -121,6 +122,22 @@ $(function() {
           object.cof = 1;
           object.recalc();   
       }
+      if (type === "golf") {
+          button.setTexture(PIXI.Texture.fromImage('resources/img/golfButtonUp.png'));
+          object.view.setTexture(PIXI.Texture.fromImage('resources/img/gball.png'));
+          object.view.scale.x = 0.10;
+          object.view.scale.y = 0.10;  
+          object.mass = 0.15;
+          object.restitution = 3.5;    
+          object.geometry.radius = 10;
+          object.view.position.x = 45;
+          object.view.position.y = 300;
+          object.x = 45;
+          object.y = 300;
+          object.cof = 1;
+          object.recalc();  
+      }
+
     };
 
 
