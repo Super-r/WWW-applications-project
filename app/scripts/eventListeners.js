@@ -91,4 +91,37 @@ $(function() {
       }
     };
 
+    // Callback functions for on screen buttons
+    //
+    window.buttonUp = function buttonUp(button, object, type) {
+      if (type === "tennis") {
+        button.setTexture(PIXI.Texture.fromImage('resources/img/tennisButtonUp.png'));
+        object.view.setTexture(PIXI.Texture.fromImage('resources/img/tball.png'));
+        object.view.scale.x = 0.13;
+        object.view.scale.y = 0.13;  
+        object.mass = 0.1;
+        object.restitution = 3.5;    
+        object.geometry.radius = 13;
+        object.x = 45;
+        object.y = 350;
+        object.cof = 0.6;
+        object.recalc();  
+      }
+      if (type === "cannon") {
+          object.view.setTexture(PIXI.Texture.fromImage('resources/img/cball.png'));
+          object.view.scale.x = 0.20;
+          object.view.scale.y = 0.20;  
+          object.mass = 20;
+          object.restitution = 1.5;    
+          object.geometry.radius = 25;
+          object.view.position.x = 45;
+          object.view.position.y = 300;
+          object.x = 45;
+          object.y = 300;
+          object.cof = 1;
+          object.recalc();   
+      }
+    };
+
+
 }(jQuery));

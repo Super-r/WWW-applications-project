@@ -7,7 +7,9 @@ window.physics = $(function() {
         //Add renderer to the world
         world.add(objects.renderer);
         var backgrounds = window.background[0].getBackgrounds();
-       
+        var tennisButton = objects.tennisButton;
+        var cannonballButton = objects.cannonballButton;
+
         // Add background images
         //
         world._renderer.stage.addChild(backgrounds.far);
@@ -15,6 +17,11 @@ window.physics = $(function() {
         world._renderer.stage.addChild(backgrounds.mid);
 
         world._renderer.stage.addChild(backgrounds.close);
+
+        //Add buttons
+        //
+        world._renderer.stage.addChild(cannonballButton);
+        world._renderer.stage.addChild(tennisButton);
 
 
         var squares = objects.squares;
@@ -29,10 +36,10 @@ window.physics = $(function() {
           squares[i].view.scale.x = 0.32;
           squares[i].view.scale.y = 0.32;
           world.add(squares[i]);
-    };
+        };
 
 
-        var sq = objects.square;
+        var sq = objects.cannonball;
         sq.view = objects.renderer.createDisplay('sprite', {
           texture: 'resources/img/cball.png',
           anchor: {
@@ -44,6 +51,24 @@ window.physics = $(function() {
           sq.view.scale.x = 0.20;
           sq.view.scale.y = 0.20;
           world.add(sq);
+
+        // set the mousedown and touchstart callback.
+        tennisButton.mousedown = tennisButton.touchstart = function(data) {
+          this.setTexture(PIXI.Texture.fromImage('resources/img/tennisButtonDown.png'));
+        };
+               
+        tennisButton.mouseup = tennisButton.touchend = function(data) {
+          buttonUp(this, sq, "tennis");  
+        };
+
+        cannonballButton.mousedown = cannonballButton.touchstart = function(data) {
+          this.setTexture(PIXI.Texture.fromImage('resources/img/cannonballButtonDown.png'));
+        };
+               
+        cannonballButton.mouseup = cannonballButton.touchend = function(data) {
+          buttonUp(this, sq, "cannon");
+        };
+
 
 
           world._renderer.stage.mousedown = world._renderer.stage.touchstart = function(data) {
@@ -93,8 +118,10 @@ window.physics = $(function() {
         world.add( Physics.behavior('body-impulse-response') );
         world.add( Physics.behavior('edge-collision-detection', {
           aabb: bounds,
-          restitution: 0.3 //Sets the bouncing speed and power.
+          restitution: 0.3, //Sets the bouncing speed and power.
+          cof: 1
         }));
+
 
         world.add( Physics.behavior('body-collision-detection') ); //Recognizes the collisions between objects.
         world.add( Physics.behavior('sweep-prune') ); //add sweeping and pruning between objects

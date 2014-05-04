@@ -5,7 +5,7 @@
     "sass-bootstrap": "~3.0.0",
     "modernizr": "~2.6.2",
     "jquery": "~1.10.2",
-    "physicsjs": "~0.5.3-alpha",
+    "physicsjs": "~0.5.4",
     "pixijs": "latest"
   },
   "devDependencies": {}

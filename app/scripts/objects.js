@@ -30,7 +30,11 @@ window.objects = $(function() {
             {x: 20, y: 20},
             {x: 20, y: 0},
             {x: 0, y: 0}
-          ]
+          ],
+          restitution: 0.05,
+          fixed: true,
+          mass: 1,
+          cof: 1
         });
       squares.push(square);
       }
@@ -38,14 +42,47 @@ window.objects = $(function() {
     return squares;
   };
   
-  var square = function() {
-    var square = Physics.body('circle', {
-      x: 25,
+  var cannonball = function() {
+    var circle = Physics.body('circle', {
+      x: 45,
       y: 455,
-      m: 10.0,
-      radius: 25
+      mass: 20.0,
+      radius: 25,
+      restitution: 1.5,
+      cof: 1
     });
-    return square;
+    return circle;
+  };
+
+  var tennisButton = function() {
+    var button = new PIXI.Sprite(PIXI.Texture.fromImage('resources/img/tennisButtonUp.png'));
+    button.buttonMode = true;
+
+    button.anchor.x = 0.5;
+    button.anchor.y = 0.5;
+    button.scale.x = 0.4;
+    button.scale.y = 0.4;
+    button.position.x = 55;
+    button.position.y = 15;
+
+    // make the button interactive..
+    button.interactive = true;
+    return button;
+  };
+
+  var cannonballButton = function() {
+    var button = new PIXI.Sprite(PIXI.Texture.fromImage('resources/img/cannonballButtonUp.png'));
+    button.buttonMode = true;
+    button.anchor.x = 0.5;
+    button.anchor.y = 0.5;
+    button.scale.x = 0.4;
+    button.scale.y = 0.4;
+    button.position.x = 170;
+    button.position.y = 15;
+
+    // make the button interactive..
+    button.interactive = true;
+    return button;
   };
   
   var resolutions = function(){
@@ -62,8 +99,10 @@ window.objects = $(function() {
     getObjects: function () {
       return {
         'squares': squares(),
-        'square': square(),
+        'cannonball': cannonball(),
         'renderer': renderer(),
+        'tennisButton': tennisButton(),
+        'cannonballButton': cannonballButton(),
         'res': resolutions()
       };
     }

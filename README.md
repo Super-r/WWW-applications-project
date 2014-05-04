@@ -8,3 +8,6 @@ T-111.5360 WWW-applications
 5. Done!
 
 Local development environment can be started with `grunt server`. All CSS & JS coding should be done under the _app/_ folder.
+
+Note, when this document was written the pixi version that is downloaded by bower is corrupted so if that problem still persists download
+functional version from [pixi repository] (https://github.com/GoodBoyDigital/pixi.js/) and use that instead!
