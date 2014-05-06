@@ -35,7 +35,6 @@ $(function() {
     //
     window.mouseUp = function mouseUp(stage, data, world) {
       stage.dragging = false;
-      world._bodies[25].fixed = false;
       for (var i = 0; i < world._bodies.length -1; i++) {
         world._bodies[i].fixed = false;
       }
@@ -45,7 +44,7 @@ $(function() {
     // set the callbacks for when the mouse or a touch moves
     //
     window.mouseMove = function mouseMove(stage, data, world, backgrounds) {
-      if(stage.dragging && !world._bodies[25].view.dragging && ((backgrounds.far.tilePosition.x < 0 && data.originalEvent.webkitMovementX > 0) || (backgrounds.far.tilePosition.x > -12 && data.originalEvent.webkitMovementX < 0))) {
+      if(stage.dragging && !stage.draggingItem && ((backgrounds.far.tilePosition.x < 0 && data.originalEvent.webkitMovementX > 0) || (backgrounds.far.tilePosition.x > -12 && data.originalEvent.webkitMovementX < 0))) {
         moveViewport(data, world, backgrounds);
       }
     };
@@ -55,23 +54,26 @@ $(function() {
     window.mouseDownTarget = function mouseDownTarget(target, data, world) {
       // stop the default event...
       data.originalEvent.preventDefault();
-      world._bodies[world._bodies.length-1].fixed = true;
+      target.parentBody.fixed = true;
       // store a reference to the data
       // The reason for this is because of multitouch
       // we want to track the movement of this particular touch
-      target.data = data;
+      target.parentBody.data = data;
+      target.parent.draggingItem = true;
       target.dragging = true;
+      console.log("now in mouse down!");
     };
 
 
     // set the events for when the mouse is released or a touch is released
     //
     window.mouseUpTarget = function mouseUpTarget(target, data, world) {
+      target.parent.draggingItem = false;
       target.dragging = false;
-      world._bodies[world._bodies.length-1].fixed = false;
+      target.parentBody.fixed = false;
       //Calculate the current velocity of the object.
-      world._bodies[world._bodies.length-1].state.vel._[0] = (world._bodies[world._bodies.length-1].state.pos._[0] - world._bodies[world._bodies.length-1].state.old.pos._[0]) / (world._dt*10);
-      world._bodies[world._bodies.length-1].state.vel._[1] = (world._bodies[world._bodies.length-1].state.pos._[1] - world._bodies[world._bodies.length-1].state.old.pos._[1]) / (world._dt*10);
+      target.parentBody.state.vel._[0] = (target.parentBody.state.pos._[0] - target.parentBody.state.old.pos._[0]) / (world._dt*10);
+      target.parentBody.state.vel._[1] = (target.parentBody.state.pos._[1] - target.parentBody.state.old.pos._[1]) / (world._dt*10);
       // set the interaction data to null
       target.data = null;
     };
@@ -81,15 +83,16 @@ $(function() {
     //
     window.mouseMoveTarget = function mouseMoveTarget(target, data, world) {
       if(target.dragging) {
-        var newPosition = target.data.getLocalPosition(target.parent);
+        var newPosition = target.parentBody.data.getLocalPosition(target.parent);
         target.position.x = newPosition.x;
         target.position.y = newPosition.y;
-        world._bodies[world._bodies.length-1].state.old.pos._[0] = world._bodies[world._bodies.length-1].state.pos._[0];
-        world._bodies[world._bodies.length-1].state.old.pos._[1] = world._bodies[world._bodies.length-1].state.pos._[1];
-        world._bodies[world._bodies.length-1].state.pos._[0] = newPosition.x;
-        world._bodies[world._bodies.length-1].state.pos._[1] = newPosition.y;
+        target.parentBody.state.old.pos._[0] = target.parentBody.state.pos._[0];
+        target.parentBody.state.old.pos._[1] = target.parentBody.state.pos._[1];
+        target.parentBody.state.pos._[0] = newPosition.x;
+        target.parentBody.state.pos._[1] = newPosition.y;
       }
     };
+
 
     // Callback functions for on screen buttons
     //
@@ -139,6 +142,23 @@ $(function() {
       }
 
     };
+    // Callback functions for on screen buttons
+    //
+    window.addElement = function addElement(button, world) {
+        var object2 = window.objects[0].getSquare();
+        var object = object2.square;
+        object.view = world._renderer.createDisplay('sprite', {
+                texture: 'resources/img/brick.png',
+                anchor: {
+                    x: 0.5,
+                    y: 0.5
+          }
+        });
+        object.view.scale.x = 0.44;
+        object.view.scale.y = 0.44;
+        world.add(object);
+        button.setTexture(PIXI.Texture.fromImage('resources/img/addButtonUp.png'));
 
+    };
 
 }(jQuery));
